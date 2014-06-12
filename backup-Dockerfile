@@ -1,0 +1,9 @@
+FROM ubuntu
+
+RUN apt-get update
+
+RUN apt-get -y --force-yes install curl uuid-runtime git rng-tools git gnupg-agent haveged
+
+RUN mkdir experiment && cd experiment && curl -O http://dev.ngrok.com/.gitignore && curl -O http://dev.ngrok.com/sim.sh && chmod +x sim.sh
+
+ENTRYPOINT ["/bin/bash"]

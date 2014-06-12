@@ -1,2 +1,10 @@
 foo.pub
 foo.sec
+secring.gpg
+pubring.gpg
+pubring.gpg~
+trustdb.gpg
+random_seed
+private-keys-v1.d/
+.setup
+.vagrant/

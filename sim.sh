@@ -1,43 +1,20 @@
 #!/bin/bash
 
-# deps
-install() {
-  DEBIAN_FRONTEND=noninteractive sudo apt-get -y --force-yes install $@
-}
-install rng-tools git 
+# bail on fail
+set -e
 
-# set up GPG
+# This sets up the new machine for the git experiment
+./scripts/1_setup.sh
 
-[ -e /var/run/rngd.pid ] || sudo rngd -r /dev/urandom
-gpg --batch --gen-key <<EOF
-    %echo Generating a basic OpenPGP key
-    Key-Type: DSA
-    Key-Length: 1024
-    Subkey-Type: ELG-E
-    Subkey-Length: 1024
-    Name-Real: Juan Uys
-    Name-Comment: with a classic passphrase
-    Name-Email: juan@uys.io
-    Expire-Date: 0
-    Passphrase: hunter2
-    %pubring foo.pub
-    %secring foo.sec
-    # Do a commit here, so that we can later print "done" :-)
-    %commit
-    %echo done
-EOF
+# Create 24m titles (flat JSON files in our case)
+./scripts/2_create.sh
 
-# GPG Agent
-KEY=$(gpg --no-default-keyring --secret-keyring ./foo.sec \
-  --keyring ./foo.pub --list-secret-keys | grep "^sec"|cut -d'/' -f2|cut -d' ' -f1)
-echo the key is $KEY
+# Modify each title a few times (including commit with GPG signing)
+./scripts/3_modify.sh
 
-# create loads of titles (flat JSON files in our case)
+# logs
+#+ check the Git footprint (large?)
+#+ auditing (log per title), performance of auditing
+#+ retrieve a specific version of a title; walk back in time. Performance of this.
 
-# modify/commit/sign every title a few times
-
-# check the Git footprint (large?)
-
-# auditing (log per title), performance of auditing
-
-# retrieve a specific version of a title; walk back in time. Performance of this.
+./scripts/4_results.sh

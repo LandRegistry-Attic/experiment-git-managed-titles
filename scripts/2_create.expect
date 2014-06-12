@@ -1,0 +1,5 @@
+#!/usr/bin/expect
+spawn "../../scripts/_create.sh" 
+expect "passphrase:"
+send "hunter2\r"
+interact
